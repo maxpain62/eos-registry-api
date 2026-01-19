@@ -48,13 +48,7 @@
  			</dependency>
 		</dependencies>
 	</dependencyManagement>
-		<distributionManagement>
-  		<repository>
-    			<id>eos-eos-registry-api</id>
-    			<name>eos-eos-registry-api</name>
-    			<url>https://eos-134448505602.d.codeartifact.ap-south-1.amazonaws.com/maven/eos-registry-api/</url>
-  		</repository>
-	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>
