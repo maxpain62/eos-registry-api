@@ -13,7 +13,7 @@ podTemplate(yaml: readTrusted('pod.yaml')) {
         echo "${env.GIT_TAG}"
       }
     stage ('save codeartifact token') {
-      container('aws-cli') {
+      container('aws-cli-helm') {
         sh """
           aws codeartifact get-authorization-token --domain eos --domain-owner 134448505602 --region ap-south-1 --query authorizationToken --output text > /root/.m2/token.txt
            """
@@ -48,6 +48,15 @@ podTemplate(yaml: readTrusted('pod.yaml')) {
           --opt filename=Dockerfile --local context=.\
           --local dockerfile=.\
           --output type=image,name=134448505602.dkr.ecr.ap-south-1.amazonaws.com/dev/eos-registry-api:latest,push=true
+          """
+      }
+    }
+    stage ('package helm chart and push aws ecr repository') {
+      container('aws-cli-helm') {
+        sh """
+          helm package eos-registry-api && ls -l
+          helm push eos-registry-api-1.0.tgz oci://134448505602.dkr.ecr.ap-south-1.amazonaws.com/dev/helm/
+          aws ecr describe-images --repository-name dev/helm/eos-registry-api --region ap-south-1
           """
       }
     }
