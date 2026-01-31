@@ -1,29 +1,29 @@
 apiVersions: apps/v1
 kind: Deployment
 metadata:
-  name: {{ Values.labels.app }}-deployment
+  name: {{ .Values.labels.app }}-deployment
   labels:
-    app: {{ Values.labels.app }}-app
-    env: {{ Values.labels.env }}
-  namespace: {{ Values.namespace }}
+    app: {{ .Values.labels.app }}-app
+    env: {{ .Values.labels.env }}
+  namespace: {{ .Values.namespace }}
 spec:
   selector:
     matchLabels:
-      app: {{ Values.labels.app }}
-      env: {{ Values.labels.env }}
-  replicas: {{ Values.replicaCount }}
+      app: {{ .Values.labels.app }}
+      env: {{ .Values.labels.env }}
+  replicas: {{ .Values.replicaCount }}
   template:
     metadata:
-      name: {{ Values.labels.app }}
+      name: {{ .Values.labels.app }}
       labels:
-        app: {{ Values.labels.app }}
-        env: {{ Values.labels.env }}
+        app: {{ .Values.labels.app }}
+        env: {{ .Values.labels.env }}
     spec:
       containers:
-        - name: {{ Values.labels.app }}-container
-          image: {{ Values.image }}
+        - name: {{ .Values.labels.app }}-container
+          image: {{ .Values.image }}
           ports:
-            - containerPort: {{ Values.port }}
+            - containerPort: {{ .Values.port }}
               protocol: TCP
       imagePullSecrets:
         - name: ecr-cred

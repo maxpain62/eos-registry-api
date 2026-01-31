@@ -1,17 +1,17 @@
 apiVersions: v1
 kind: Service
 metadata:
-  name: {{ Values.labels.app }}-service
+  name: {{ .Values.labels.app }}-service
   labels:
-    app: {{ Values.labels.app }}-app
-    env: {{ Values.labels.env }}
-  namespace: {{ Values.namespace }}
+    app: {{ .Values.labels.app }}-app
+    env: {{ .Values.labels.env }}
+  namespace: {{ .Values.namespace }}
 spec:
   type: NodePort
   selector:
-    app: {{ Values.labels.app }}
-    env: {{ Values.labels.env }}
+    app: {{ .Values.labels.app }}
+    env: {{ .Values.labels.env }}
   ports:
-    - port: {{ Values.port }}
+    - port: {{ .Values.port }}
       nodePort: 30003
       protocol: TCP
