@@ -16,7 +16,8 @@ podTemplate(yaml: readTrusted('pod.yaml')) {
       container('aws-cli-helm') {
         sh """
           aws codeartifact get-authorization-token --domain eos --domain-owner 134448505602 --region ap-south-1 --query authorizationToken --output text > /root/.m2/token.txt
-           """
+          aws ecr get-login-password --region ap-south-1 | helm registry login --username AWS --password-stdin 134448505602.dkr.ecr.ap-south-1.amazonaws.com
+          """
         }
       }
     stage ('buils maven project') {
@@ -54,8 +55,8 @@ podTemplate(yaml: readTrusted('pod.yaml')) {
     stage ('package helm chart and push aws ecr repository') {
       container('aws-cli-helm') {
         sh """
-          helm package eos-registry-api && ls -l
-          helm push eos-registry-api-1.0.tgz oci://134448505602.dkr.ecr.ap-south-1.amazonaws.com/dev/helm/
+          helm package eos-registry-api-chart && ls -l
+          helm push eos-registry-api-0.1.0.tgz oci://134448505602.dkr.ecr.ap-south-1.amazonaws.com/dev/helm/
           aws ecr describe-images --repository-name dev/helm/eos-registry-api --region ap-south-1
           """
       }
