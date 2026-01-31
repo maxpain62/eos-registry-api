@@ -1,0 +1,11 @@
+replicaCount: 1
+
+image: 134448505602.dkr.ecr.ap-south-1.amazonaws.com/dev/eos-registry-api:latest
+
+port: 8761
+
+labels:
+  app: eos-registry-api
+  env: dev
+
+namespace: eos-dev
