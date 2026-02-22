@@ -1,11 +1,20 @@
 replicaCount: 1
 
-image: 134448505602.dkr.ecr.ap-south-1.amazonaws.com/dev/eos-registry-api:latest
-
-port: 8761
+containers:
+  image: 134448505602.dkr.ecr.ap-south-1.amazonaws.com/dev/eos-registry-api
+  port: 8761
 
 labels:
   app: eos-registry-api
   env: dev
 
-namespace: eos-dev
+metadata:
+  namespace: eos-dev
+
+resources:
+  requests:
+    cpu: 125m
+    memory: 256Mi
+  limits:
+    cpu: 250m
+    memory: 512Mi

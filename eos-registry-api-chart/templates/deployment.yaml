@@ -5,7 +5,7 @@ metadata:
   labels:
     app: {{ .Values.labels.app }}-app
     env: {{ .Values.labels.env }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Values.metadata.namespace }}
 spec:
   selector:
     matchLabels:
@@ -21,9 +21,30 @@ spec:
     spec:
       containers:
         - name: {{ .Values.labels.app }}-container
-          image: {{ .Values.image }}
+          image: "{{ .Values.containers.image }}:{{ .Chart.appVersion }}"
           ports:
-            - containerPort: {{ .Values.port }}
+            - containerPort: {{ .Values.containers.port }}
               protocol: TCP
+          resources:
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.containers.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.containers.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 5
       imagePullSecrets:
         - name: ecr-cred
