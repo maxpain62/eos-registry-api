@@ -48,17 +48,18 @@ podTemplate(yaml: readTrusted('pod.yaml')) {
           build --frontend dockerfile.v0\
           --opt filename=Dockerfile --local context=.\
           --local dockerfile=.\
-          --output type=image,name=134448505602.dkr.ecr.ap-south-1.amazonaws.com/dev/eos-registry-api:latest,push=true
+          --output type=image,name=134448505602.dkr.ecr.ap-south-1.amazonaws.com/dev/eos-registry-api:${GIT_TAG},push=true
           """
       }
     }
     stage ('package helm chart and push aws ecr repository') {
       container('aws-cli-helm') {
-        sh """
+        sh '''
+          HELM_CHART_VERSION=$(cat eos-registry-api-chart/Chart.yaml | grep 'version' | awk '{print $2}'| sed 's| ||g')
           helm package eos-registry-api-chart && ls -l
-          helm push eos-registry-api-0.1.0.tgz oci://134448505602.dkr.ecr.ap-south-1.amazonaws.com/dev/helm/
+          helm push eos-registry-api-${HELM_CHART_VERSION}.tgz oci://134448505602.dkr.ecr.ap-south-1.amazonaws.com/dev/helm/
           aws ecr describe-images --repository-name dev/helm/eos-registry-api --region ap-south-1
-          """
+          '''
       }
     }
   }
